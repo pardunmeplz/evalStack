@@ -9,7 +9,7 @@ def scan(source: str):
     tokens = []
     num = ''
     for c in source:
-        operators = {'+', '-', '*', '/'}
+        operators = {'+':2, '-':2, '*':1, '/':1}
         if isNumber(c):
             num+=c
             continue
@@ -24,7 +24,16 @@ def scan(source: str):
         if c in operators:
             tokens.append({
                 "type": 'op',
-                "val": c 
+                "val": c,
+                "precedence": operators[c]
+            })
+            continue
+
+        if c == '(' or c == ')':
+            tokens.append({
+                "type": 'par',
+                "val": c,
+                "precedence": 10 
             })
             continue
 
@@ -33,6 +42,9 @@ def scan(source: str):
         print("Unexpected token " + c)
         error = True
     if num != '':
-        tokens.append(num)
+        tokens.append({
+                "type":"num",
+                "val": num
+            })
     return tokens
 
